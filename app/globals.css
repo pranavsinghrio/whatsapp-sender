@@ -170,6 +170,9 @@ input[type="file"] { display: none; }
 
 .tab:hover:not(.active) { background: #f0f2f5; }
 .tab.active { background: #25d366; color: #fff; }
+.tab.tab-email.active { background: #1a73e8; color: #fff; }
+
+.sub-tabs { margin-top: -4px; }
 
 .field-label {
   display: block;
