@@ -222,6 +222,15 @@ export default function Page() {
     e.target.value = "";
   }
 
+  function unsend(id) {
+    const setter = channel === "whatsapp" ? setWaSent : setEmailSent;
+    setter((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  }
+
   function openContact(contact) {
     if (channel === "whatsapp") {
       const url = `https://wa.me/${contact.phone}?text=${encodeURIComponent(waMessage)}`;
@@ -408,17 +417,34 @@ export default function Page() {
                 {filtered.map((c) => {
                   const id = c[itemKey];
                   const isSent = !!sentMap[id];
+                  if (isSent) {
+                    return (
+                      <div key={id} className="card sent">
+                        <div className="name">{c.name || "(no name)"}</div>
+                        <div className="number">{channel === "whatsapp" ? `+${id}` : id}</div>
+                        <div className="card-foot">
+                          <span className="badge">SENT</span>
+                          <button
+                            className="unsend-btn"
+                            onClick={() => unsend(id)}
+                            title="Mark as not sent — makes this clickable again"
+                            type="button"
+                          >
+                            ↶ Undo
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  }
                   return (
                     <button
                       key={id}
-                      className={`card ${isSent ? "sent" : ""}`}
+                      className="card"
                       onClick={() => openContact(c)}
-                      disabled={isSent}
                       type="button"
                     >
                       <div className="name">{c.name || "(no name)"}</div>
                       <div className="number">{channel === "whatsapp" ? `+${id}` : id}</div>
-                      {isSent && <span className="badge">SENT</span>}
                     </button>
                   );
                 })}
